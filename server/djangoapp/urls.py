@@ -12,6 +12,11 @@ urlpatterns = [
    path('about/', views.about, name='about'),
    path(route='about/', view=views.about, name='about'),
    path(route='contact/', view=views.contact, name='contact'),
+   path('login/', views.login_request, name='login_request'), 
+   path('', views.get_dealerships, name='index'),
+   path('logout/', views.logout_request, name='logout_request'),
+   path(route='register/', view=views.registration_request, name='registration_request'),
+
 
 
     # path for registration

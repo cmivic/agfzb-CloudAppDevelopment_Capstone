@@ -9,6 +9,8 @@ from django.contrib import messages
 from datetime import datetime
 import logging
 import json
+from django.contrib.auth.models import User
+from django.contrib.auth import login
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -21,6 +23,40 @@ def about(request):
 
 def contact(request):
     return render(request, 'contact.html')
+
+def login_request(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect("djangoapp:index")
+        else:
+            messages.error(request, "Invalid username or password.")
+    return render(request, "djangoapp/index.html")
+
+def logout_request(request):
+    logout(request)
+    return redirect("djangoapp:index")
+
+def registration_request(request):
+    if request.method == "POST":
+        username = request.POST["username"]
+        password = request.POST["password"]
+        first_name = request.POST["first_name"]
+        last_name = request.POST["last_name"]
+        
+        # Criando o usuário
+        user = User.objects.create_user(username, password=password, first_name=first_name, last_name=last_name)
+
+        # Fazendo o login do usuário
+        login(request, user)
+
+        # Redirecionando para a página inicial
+        return redirect("djangoapp:index")
+
+    return render(request, 'djangoapp/registration.html')
 
 
 # Create a `login_request` view to handle sign in request
